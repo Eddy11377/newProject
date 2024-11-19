@@ -11,8 +11,9 @@ class SubscriptionRepository {
     return subscriptions
   }
 
-  findSubscription(username, subscriber) {
-    return this.database.find((el) => String(el.username) === String(username) && String(el.subscriber) === String(subscriber))
+  findSubscription(subscriber, username ) {
+    const result = this.database.find(el => String(el.username) === String(username) && String(el.subscriber) === String(subscriber))
+    return result
   }
 
   createSubscription(username, subscriber) {

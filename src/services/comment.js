@@ -86,4 +86,4 @@ class CommentService {
   }
 }
 
-module.exports = new CommentService(commentRepository, userService)
+module.exports = new CommentService(commentRepository, userService, subscriptionService, postService)

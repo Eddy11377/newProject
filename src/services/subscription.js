@@ -35,6 +35,14 @@ class SubscriptionService {
     }
   }
 
+  checkSubscription(writer, postAuthor) {
+    try {
+      return subscriptionRepository.findSubscription(writer, postAuthor)
+    } catch (error) {
+      throw new Error('Не удалось проверить подписку. Что-то пошло не так')
+    }
+  }
+
   unsubscribe(username, subscriber) {
     try {
       const isSubscriptionExist = subscriptionRepository.findSubscription(username, subscriber)
