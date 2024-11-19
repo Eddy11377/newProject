@@ -19,7 +19,7 @@ class PostController {
   getPostById = (req, res) => {
     try {
       const id = req.params.id
-      const result = postService.getPostById(id)
+      const result = this.postService.getPostById(id)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -46,15 +46,14 @@ class PostController {
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
-        return res.status(400).json({ message: "Поста с таким ID не существует" })
+        return res.status(400).json({ message: error.message })
       }
       res.status(500).send('something went wrong')
     }
   }
   deletePost = async (req, res) => {
     try {
-      const id = req.params.id
-      this.postService.deletePost(id)
+      this.postService.deletePost(req.params.id)
       res.status(204).send()
     } catch (error) {
       if (error.message) {

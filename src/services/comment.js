@@ -4,12 +4,11 @@ const subscriptionService = require('./subscription')
 const postService = require('./post')
 
 class CommentService {
-  constructor(commentRepository, userService) {
+  constructor(commentRepository, userService, subscriptionService, postService) {
     this.commentRepository = commentRepository
     this.userService = userService;
     this.subscriptionService = subscriptionService
     this.postService = postService
-
   }
 
   getComments(offset, limit) {
@@ -22,7 +21,7 @@ class CommentService {
 
   getCommentById(id) {
     try {
-      const comment = commentRepository.getCommentById(id)
+      const comment = this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
@@ -35,10 +34,9 @@ class CommentService {
     }
   }
 
-  createComment(data) {
+  createComment(username, postId, text) {
     try {
-      const { username, postId, text } = data
-      const post = postService.getPostById(postId)
+      const post = this.postService.getPostById(postId)
       const postAuthor = post.username
       const isOnlySubscriberCanWrite = this.userService.checkSettingWriteComment(postAuthor)
       if (isOnlySubscriberCanWrite) {
@@ -58,10 +56,9 @@ class CommentService {
     }
   }
 
-  updateComment(data) {
+  updateComment(text, id) {
     try {
-      const { text, id } = data
-      const comment = commentRepository.getCommentById(id)
+      const comment = this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
@@ -76,11 +73,11 @@ class CommentService {
 
   deleteComment(id) {
     try {
-      const comment = commentRepository.getCommentById(id)
+      const comment = this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
-      return commentRepository.deleteComment(id)
+      return this.commentRepository.deleteComment(id)
     } catch (error) {
       if (error.message) {
         throw error

@@ -29,6 +29,10 @@ class SubscriptionRepository {
   checkSubscription(writer, postAuthor) {
     return database.find(el => String(el.username) === String(postAuthor) && String(el.subscriber) === String(writer))
   }
+
+  getSubscribers(username) {
+    return database.filter(el => String(username) === String(el.subscriber))
+  }
 }
 
 

@@ -16,7 +16,7 @@ class UserController {
 
   getUserByUsername = async (req, res) => {
     try {
-      const result = userService.getUserByUsername(req.params.username)
+      const result = this.userService.getUserByUsername(req.params.username)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -40,7 +40,8 @@ class UserController {
 
   updateUser = async (req, res) => {
     try {
-      const result = userService.updateUser(req.body)
+      const { username } = req.body
+      const result = this.userService.updateUser(username)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {

@@ -32,10 +32,10 @@ class UserRepository {
     database.splice(foundIndex, 1)
   }
 
-  checkSettingWriteComment(username) {
+  isOnlySubscribersCanWriteComments(username) {
     const user = database.find(el => String(el.username) === String(username))
-    const permissionToWriteComment = user.settings.onlySubscriberWriteComment
-    return permissionToWriteComment
+    const onlySubscribersCanWriteComments = user.settings.onlySubscriberWriteComment
+    return onlySubscribersCanWriteComments
   }
 }
 

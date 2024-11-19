@@ -15,7 +15,7 @@ class PostService {
 
   getPostById(id) {
     try {
-      const post = postRepository.getPostById(id)
+      const post = this.postRepository.getPostById(id)
       if (!post) {
         throw new Error('Поста с таким ID не существует')
       }

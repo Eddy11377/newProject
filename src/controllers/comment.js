@@ -29,7 +29,8 @@ class CommentController {
 
   createComment = async (req, res) => {
     try {
-      const result = this.commentService.createComment(req.body)
+      const { username, postId, text } = req.body
+      const result = this.commentService.createComment(username, postId, text)
       res.status(201).json(result)
     } catch (error) {
       console.log(error);
@@ -42,7 +43,8 @@ class CommentController {
 
   updateComment = async (req, res) => {
     try {
-      const result = this.commentService.updateComment(req.body)
+      const { text, id } = req.body
+      const result = this.commentService.updateComment(text, id)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {

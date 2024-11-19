@@ -49,9 +49,8 @@ class UserService {
     }
   }
 
-  updateUser(data) {
+  updateUser(username) {
     try {
-      const { username } = data
       const foundUser = this.userRepository.getUserByUsername(username)
       if (!foundUser) {
         throw new Error('Пользователя не существует')
@@ -84,7 +83,7 @@ class UserService {
   }
 
   checkSettingWriteComment(username) {
-    return this.userRepository.checkSettingWriteComment(username)
+    return this.userRepository.isOnlySubscribersCanWriteComments(username)
   }
 }
 
