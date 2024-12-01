@@ -13,11 +13,14 @@ class MessageRepository {
         return { id: message.id }
     }
 
-    getMessages(chat_id) {
+    getMessagesByChatId(chat_id) {
         return this.database.filter((message) => {
             return Number(chat_id) === Number(message.chat_id)
         })
+    }
 
+    getMessages(offset = 0, limit = 50) {
+        return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
     }
 
 }

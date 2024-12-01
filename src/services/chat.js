@@ -7,7 +7,7 @@ class ChatService {
 
     getChats(offset, limit, first_participant, second_participant,  ) {
         try {
-            if ((first_participant && second_participant) || (second_participant && first_participant)) {
+            if (first_participant && second_participant) {
                 return this.chatRepository.getChat(first_participant, second_participant)
             }
             return this.chatRepository.getChats(offset, limit)

@@ -20,8 +20,8 @@ class MessageController {
 
     getMessages = async (req, res) => {
         try {
-            const { chat_id } = req.query;
-            const result = messageService.getMessages(chat_id);
+            const { chat_id, offset, limit } = req.query;
+            const result = messageService.getMessages(chat_id, offset, limit);
             res.status(200).json(result);
         } catch (error) {
             res.status(500).send('something went wrong');

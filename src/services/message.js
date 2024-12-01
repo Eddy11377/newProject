@@ -7,16 +7,21 @@ class MessageService {
 
     createMessage(text, author, chat_id) {
         try {
-            return messageRepository.createMessage(text, author, chat_id)
+            return this.messageRepository.createMessage(text, author, chat_id)
         } catch (error) {
             console.log(error);
             throw new Error('не удалось создать сообщение')
         }
     }
 
-    getMessages(chat_id) {
+    getMessages(chat_id, offset, limit) {
         try {
-            return this.messageRepository.getMessages(chat_id)
+            if(chat_id) {
+                return this.messageRepository.getMessagesByChatId(chat_id)
+            } else {
+                return this.messageRepository.getMessages(offset, limit)
+            }
+            
         } catch (error) {
             console.log(error);
             throw new Error('не удалось получить сообщения')
