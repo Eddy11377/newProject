@@ -1,31 +1,45 @@
-const messageModel = require('../models/message');
-const database = [];
+const { where } = require('sequelize');
+const messageModel = require('../db/models/message');
 
 class MessageRepository {
-    constructor(database) {
-        this.database = database;
-        this.id = 1;
+    constructor(messageModel) {
+        this.messageModel = messageModel;
     }
-    createMessage(text, author, chat_id) {
-        const message = new messageModel(this.id, text, author, chat_id, new Date())
-        this.database.push(message)
-        this.id += 1
-        return { id: message.id }
-    }
-
-    getMessagesByChatId(chat_id) {
-        return this.database.filter((message) => {
-            return Number(chat_id) === Number(message.chat_id)
+    async createMessage(text, author, chatId) {
+        // const message = new messageModel(this.id, text, author, chat_id, new Date())
+        // this.database.push(message)
+        // this.id += 1
+        // return { id: message.id }
+        return await this.messageModel.create({
+            text: text,
+            author: author,
+            chatId: chatId
         })
     }
 
-    getMessages(offset = 0, limit = 50) {
-        return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+    async getMessagesByChatId(chatId) {
+        // return this.database.filter((message) => {
+        //     return Number(chat_id) === Number(message.chat_id)
+        // })
+
+        return await this.messageModel.findAll({
+            where: {
+                chat_id: chatId
+            }
+        })
+    }
+
+    async getMessages(offset = 0, limit = 50) {
+        // return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+        return await this.messageModel.findAll({
+            offset: offset,
+            limit: limit
+        })
     }
 
 }
 
-module.exports = new MessageRepository(database)
+module.exports = new MessageRepository(messageModel)
 
 
 

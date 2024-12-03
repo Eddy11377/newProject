@@ -6,7 +6,7 @@ class UserController {
   getUsers = async (req, res) => {
     try {
       const { offset, limit } = req.query
-      const result = this.userService.getUsers(offset, limit)
+      const result = await this.userService.getUsers(offset, limit)
       res.status(200).json(result)
     } catch (error) {
       console.log(error);
@@ -16,7 +16,7 @@ class UserController {
 
   getUserByUsername = async (req, res) => {
     try {
-      const result = this.userService.getUserByUsername(req.params.username)
+      const result = await this.userService.getUserByUsername(req.params.username)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -28,7 +28,8 @@ class UserController {
 
   createUser = async (req, res) => {
     try {
-      const result = this.userService.createUser(req.body)
+      const { username, password, settings } = req.body
+      const result = await this.userService.createUser(username, password, settings)
       res.status(201).json(result)
     } catch (error) {
       if (error.message) {
@@ -41,7 +42,7 @@ class UserController {
   updateUser = async (req, res) => {
     try {
       const { username } = req.body
-      const result = this.userService.updateUser(username)
+      const result = await this.userService.updateUser(username)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -53,7 +54,7 @@ class UserController {
 
   deleteUser = async (req, res) => {
     try {
-      this.userService.deleteUser(req.params.username)
+      await this.userService.deleteUser(req.params.username)
       res.status(204).send()
     } catch (error) {
       if (error.message) {

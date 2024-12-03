@@ -5,9 +5,9 @@ class SubscriptionService {
     this.subscriptionRepository = subscriptionRepository;
   }
 
-  getSubscriptionsByUsername(username) {
+  async getSubscriptionsByUsername(username) {
     try {
-      const foundSubscriptions = subscriptionRepository.getSubscriptionsByUsername(username)
+      const foundSubscriptions = await this.subscriptionRepository.getSubscriptionsByUsername(username)
       if (!foundSubscriptions) {
         throw new Error('Подписок с таким username не существует')
       }
@@ -20,13 +20,13 @@ class SubscriptionService {
     }
   }
 
-  subscribe(username, subscriber) {
+  async subscribe(username, subscriber) {
     try {
-      const isSubscriptionExist = subscriptionRepository.findSubscription(username, subscriber)
+      const isSubscriptionExist = await this.subscriptionRepository.findSubscription(username, subscriber)
       if (isSubscriptionExist) {
         throw new Error('Вы уже подписаны на этого пользователя')
       }
-      return subscriptionRepository.createSubscription(username, subscriber)
+      return await this.subscriptionRepository.createSubscription(username, subscriber)
     } catch (error) {
       if (error.message) {
         throw error
@@ -35,21 +35,21 @@ class SubscriptionService {
     }
   }
 
-  checkSubscription(writer, postAuthor) {
+  async checkSubscription(writer, postAuthor) {
     try {
-      return subscriptionRepository.findSubscription(writer, postAuthor)
+      return await this.subscriptionRepository.findSubscription(writer, postAuthor)
     } catch (error) {
       throw new Error('Не удалось проверить подписку. Что-то пошло не так')
     }
   }
 
-  unsubscribe(username, subscriber) {
+  async unsubscribe(username, subscriber) {
     try {
-      const isSubscriptionExist = subscriptionRepository.findSubscription(username, subscriber)
+      const isSubscriptionExist = await this.subscriptionRepository.findSubscription(username, subscriber)
       if (!isSubscriptionExist) {
         throw new Error('Вы не подписаны на пользователя. Отписаться не получилось')
       }
-      return subscriptionRepository.unsubscribe(username, subscriber)
+      return await this.subscriptionRepository.unsubscribe(username, subscriber)
     } catch (error) {
       if (error.message) {
         throw error
@@ -58,9 +58,9 @@ class SubscriptionService {
     }
   }
 
-  getSubscribers(username) {
+  async getSubscribers(username) {
     try {
-      return subscriptionRepository.getSubscribers(username)
+      return await this.subscriptionRepository.getSubscribers(username)
     } catch (error) {
       if (error.message) {
         throw error
