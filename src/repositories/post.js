@@ -1,35 +1,48 @@
-const PostModel = require('../models/post');
-const database = [];
+const { where } = require('sequelize');
+const postModel = require('../db/models/post');
 
 class PostRepository {
-  constructor(database) {
-    this.database = database;
-    this.createdPost
-    this.id = 1;
+  constructor(postModel) {
+    this.postModel = postModel;
   }
-  getPosts(offset = 0, limit = 5) {
-    return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
-  }
-
-  getPostById(id) {
-    return this.database.find(el => Number(id) === Number(el.id))
+  async getPosts(offset = 0, limit = 10) {
+    return await this.postModel.findAll({
+      offset: offset,
+      limit: limit
+    })
   }
 
-  createPost(username, text) {
-    this.createdPost = new PostModel(this.id, username, text);
-    this.database.push(this.createdPost);
-    this.id += 1
-    return this.createdPost;
-  }
-  updatePost(data, id) {
-    const foundIndex = database.findIndex(el => Number(id) === Number(el.id))
-    database[foundIndex] = data
-    return data
+  async getPostById(id) {
+    return await this.postModel.findOne({
+      where: {
+        id: id
+      }
+    })
   }
 
-  deletePost(id) {
-    const foundIndex = database.findIndex(el => Number(el.id) === Number(id))
-    database.splice(foundIndex, 1)
+  async createPost(username, text) {
+    return await this.postModel.create({
+      username: username,
+      text: text
+    })
+  }
+
+  async updatePost(text, id) {
+    return await this.postModel.update({
+      text: text
+    }, {
+      where: {
+        id: id
+      }
+    })
+  }
+
+  async deletePost(id) {
+    await this.postModel.destroy({
+      where: {
+        id: id
+      }
+    })
   }
 }
-module.exports = new PostRepository(database);
+module.exports = new PostRepository(postModel);

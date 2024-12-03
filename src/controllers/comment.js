@@ -7,7 +7,7 @@ class CommentController {
   getComments = async (req, res) => {
     try {
       const { offset, limit } = req.query
-      const result = this.commentService.getComments(offset, limit)
+      const result = await this.commentService.getComments(offset, limit)
       res.status(200).json(result)
     } catch (error) {
       console.log(error);
@@ -17,7 +17,7 @@ class CommentController {
 
   getCommentById = async (req, res) => {
     try {
-      const result = this.commentService.getCommentById(req.params.id)
+      const result = await this.commentService.getCommentById(req.params.id)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -30,7 +30,8 @@ class CommentController {
   createComment = async (req, res) => {
     try {
       const { username, postId, text } = req.body
-      const result = this.commentService.createComment(username, postId, text)
+      const result = await this.commentService.сreateComment(username, postId, text)
+      console.log(result);
       res.status(201).json(result)
     } catch (error) {
       console.log(error);
@@ -44,7 +45,7 @@ class CommentController {
   updateComment = async (req, res) => {
     try {
       const { text, id } = req.body
-      const result = this.commentService.updateComment(text, id)
+      const result = await this.commentService.updateComment(text, id)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -56,7 +57,7 @@ class CommentController {
 
   deleteComment = async (req, res) => {
     try {
-      this.commentService.deleteComment(req.params.id)
+      await this.commentService.deleteComment(req.params.id)
       res.status(204).send()
     } catch (error) {
       if (error.message) {
@@ -66,5 +67,6 @@ class CommentController {
     }
   }
 }
+
 
 module.exports = new CommentController(commentService)

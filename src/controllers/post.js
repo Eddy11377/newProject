@@ -7,7 +7,7 @@ class PostController {
   getPosts = async (req, res) => {
     try {
       const { offset, limit } = req.query;
-      const result = this.postService.getPosts(offset, limit);
+      const result = await this.postService.getPosts(offset, limit);
       res.status(200).json(result);
 
     } catch (error) {
@@ -16,10 +16,10 @@ class PostController {
     }
   };
 
-  getPostById = (req, res) => {
+  getPostById = async (req, res) => {
     try {
       const id = req.params.id
-      const result = this.postService.getPostById(id)
+      const result = await this.postService.getPostById(id)
       res.status(200).json(result)
     } catch (error) {
       if (error.message) {
@@ -31,8 +31,8 @@ class PostController {
 
   createPost = async (req, res) => {
     try {
-      const data = req.body;
-      const result = this.postService.createPost(data);
+      const { username, text } = req.body;
+      const result = await this.postService.createPost(username, text);
       res.status(201).json(result);
     } catch (error) {
       console.log(error);
@@ -41,9 +41,9 @@ class PostController {
   };
   updatePost = async (req, res) => {
     try {
-      const data = req.body
-      const result = this.postService.updatePost(data)
-      res.status(200).json(result)
+      const { id, text } = req.body
+      const result = await this.postService.updatePost(id, text)
+      res.status(200).json({ succes: true })
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -53,7 +53,7 @@ class PostController {
   }
   deletePost = async (req, res) => {
     try {
-      this.postService.deletePost(req.params.id)
+      await this.postService.deletePost(req.params.id)
       res.status(204).send()
     } catch (error) {
       if (error.message) {
