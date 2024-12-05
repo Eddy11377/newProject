@@ -15,6 +15,4 @@ async function createConnection() {
     }
 }
 
-createConnection()
-
-module.exports = { sequelize, DataTypes }
+module.exports = { sequelize, DataTypes, createConnection }

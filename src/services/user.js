@@ -82,7 +82,8 @@ class UserService {
   }
 
   async checkSettingWriteComment(username) {
-    return await this.userRepository.isOnlySubscribersCanWriteComments(username)
+    const result = await this.userRepository.isOnlySubscribersCanWriteComments(username)
+    return result?.settings?.onlySubscriberWriteComment 
   }
 }
 

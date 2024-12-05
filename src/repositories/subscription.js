@@ -6,39 +6,39 @@ class SubscriptionRepository {
   }
 
   async getSubscriptionsByUsername(username) {
-    return await this.subscriptionModel.findAll({
+    return this.subscriptionModel.findAll({
       where: {
-        username: username
+        username
       }
     })
   }
 
-  async findSubscription(username, subscriber) {
-    return await this.subscriptionModel.findOne({
+  async findSubscription(subscriber, username ) {
+    return this.subscriptionModel.findOne({
       where: {
-        subscriber: subscriber,
-        username: username
+        subscriber,
+        username
       }
     })
   }
 
   async createSubscription(username, subscriber) {
-    return await this.subscriptionModel.create({ username: username, subscriber: subscriber })
+    return this.subscriptionModel.create({ username, subscriber })
   }
 
   async unsubscribe(username, subscriber) {
-    return await this.subscriptionModel.destroy({
+    return this.subscriptionModel.destroy({
       where: {
-        username: username,
-        subscriber: subscriber
+        username,
+        subscriber
       }
     })
   }
 
   async getSubscribers(username) {
-    return await this.subscriptionModel.findAll({
+    return this.subscriptionModel.findAll({
       where: {
-        username: username
+        username
       }
     })
   }

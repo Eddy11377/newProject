@@ -39,6 +39,7 @@ class CommentService {
     try {
       const post = await this.postService.getPostById(postId)
       const postAuthor = post.username
+      console.log('пост автор такой ' + postAuthor);
       const isOnlySubscriberCanWrite = await this.userService.checkSettingWriteComment(postAuthor)
       if (isOnlySubscriberCanWrite) {
         const subscribed = await this.subscriptionService.checkSubscription(username, postAuthor)

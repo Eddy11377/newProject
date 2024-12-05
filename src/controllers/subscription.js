@@ -4,7 +4,7 @@ class SubscriptionController {
   constructor(subscriptionService) {
     this.subscriptionService = subscriptionService
   }
-  
+
   getSubscriptionsByUsername = async (req, res) => {
     try {
       const result = await this.subscriptionService.getSubscriptionsByUsername(req.params.username)
@@ -45,7 +45,7 @@ class SubscriptionController {
   unsubscribe = async (req, res) => {
     try {
       const { username, subscriber } = req.query
-      await await this.subscriptionService.unsubscribe(username, subscriber)
+      await this.subscriptionService.unsubscribe(username, subscriber)
       res.status(200).json({ text: "Вы отписались от пользователя" })
     } catch (error) {
       if (error.message) {

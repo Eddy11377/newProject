@@ -6,30 +6,30 @@ class CommentRepository {
   }
 
   async getComments(offset = 0, limit = 10) {
-    return await this.commentModel.findAll({
-      offset: offset,
-      limit: limit
+    return this.commentModel.findAll({
+      offset,
+      limit
     })
   }
 
   async getCommentById(id) {
-    return await this.commentModel.findOne({ where: { id: id } })
+    return this.commentModel.findOne({ where: { id } })
   }
 
   async createComment(username, postId, text) {
-    return await this.commentModel.create({
-      username: username,
-      postId: postId,
-      text: text
+    return this.commentModel.create({
+      username,
+      postId,
+      text
     })
   }
 
   async updateComment(text, id) {
-    return await this.commentModel.update({ text: text }, { where: { id: id } })
+    return this.commentModel.update({ text }, { where: { id } })
   }
 
   async deleteComment(id) {
-    await this.commentModel.destroy({ where: { id: id } })
+    this.commentModel.destroy({ where: { id } })
   }
 }
 

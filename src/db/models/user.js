@@ -19,6 +19,11 @@ module.exports = sequelize.define("user", {
     settings: {
         allowNull: true,
         type: DataTypes.JSONB
+    },
+
+    token: {
+        defaultValue: {}, 
+        type: DataTypes.JSONB   
     }
 }, {
     timestamps: true,

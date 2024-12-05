@@ -37,7 +37,7 @@ class SubscriptionService {
 
   async checkSubscription(writer, postAuthor) {
     try {
-      return await this.subscriptionRepository.findSubscription(writer, postAuthor)
+      return await this.subscriptionRepository.findSubscription(writer, postAuthor )
     } catch (error) {
       throw new Error('Не удалось проверить подписку. Что-то пошло не так')
     }

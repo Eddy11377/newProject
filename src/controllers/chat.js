@@ -8,8 +8,8 @@ class ChatController {
 
     getChats = async (req, res) => {
         try {
-            const { offset, limit, first_participant, second_participant } = req.query
-            const result = await this.chatService.getChats(offset, limit, first_participant, second_participant)
+            const { offset, limit, firstParticipant, secondParticipant } = req.query
+            const result = await this.chatService.getChats(offset, limit, firstParticipant, secondParticipant)
             res.status(200).json(result)
         } catch (error) {
             console.log(error);
@@ -19,9 +19,9 @@ class ChatController {
 
     createChat = async (req, res) => {
         try {
-            const { first_participant, second_participant } = req.body;
-            const result = await this.chatService.createChat(first_participant, second_participant)
-            res.status(201).json(result)
+            const { firstParticipant, secondParticipant } = req.body;
+            const result = await this.chatService.createChat(firstParticipant, secondParticipant)
+            res.status(201).json({id: result})
         } catch (error) {
             console.log(error);
             if (error.message) {

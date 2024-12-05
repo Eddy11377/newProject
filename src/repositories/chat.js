@@ -6,23 +6,26 @@ class ChatRepository {
     }
 
     async getChats(offset = 0, limit = 10) {
-        return await this.chatModel.findAll({
-            limit: limit,
-            offset: offset
+        return this.chatModel.findAll({
+            limit,
+            offset
         })
     }
 
-    async getChat(first_participant, second_participant) {
-        const { id } = await this.database.find(el => (String(el.first_participant) === String(first_participant) && String(el.second_participant) === String(second_participant)) || ((String(el.first_participant) === String(second_participant) && String(el.second_participant) === String(first_participant))))
-        return { id: id }
+    async getChat(firstParticipant, secondParticipant) {
+        return this.chatModel.findOne({
+            where: {
+                firstParticipant,
+                secondParticipant
+            }
+        })
     }
 
-    async createChat(first_participant, second_participant) {
-        const chat = await this.chatModel.create({
-            firstParticipant: first_participant,
-            secondParticipant: second_participant
+    async createChat(firstParticipant, secondParticipant) {
+        return this.chatModel.create({
+            firstParticipant,
+            secondParticipant
         })
-        return { id: chat.id }
     }
 }
 

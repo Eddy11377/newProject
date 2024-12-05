@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const postModel = require('../db/models/post');
 
 class PostRepository {
@@ -13,7 +12,7 @@ class PostRepository {
   }
 
   async getPostById(id) {
-    return await this.postModel.findOne({
+    return this.postModel.findOne({
       where: {
         id: id
       }
@@ -21,14 +20,14 @@ class PostRepository {
   }
 
   async createPost(username, text) {
-    return await this.postModel.create({
+    return this.postModel.create({
       username: username,
       text: text
     })
   }
 
   async updatePost(text, id) {
-    return await this.postModel.update({
+    return this.postModel.update({
       text: text
     }, {
       where: {
@@ -38,7 +37,7 @@ class PostRepository {
   }
 
   async deletePost(id) {
-    await this.postModel.destroy({
+    this.postModel.destroy({
       where: {
         id: id
       }
