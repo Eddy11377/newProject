@@ -7,8 +7,8 @@ class CommentController {
   getComments = async (req, res) => {
     try {
       const { offset, limit } = req.query
-      const result = this.commentService.getComments(offset, limit)
-      res.status(200).json(result)
+      const comments = await this.commentService.getComments(offset, limit)
+      res.status(200).json(comments)
     } catch (error) {
       console.log(error);
       res.status(500).send('something went wrong')
@@ -17,8 +17,8 @@ class CommentController {
 
   getCommentById = async (req, res) => {
     try {
-      const result = this.commentService.getCommentById(req.params.id)
-      res.status(200).json(result)
+      const comment = await this.commentService.getCommentById(req.params.id)
+      res.status(200).json(comment)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -30,8 +30,8 @@ class CommentController {
   createComment = async (req, res) => {
     try {
       const { username, postId, text } = req.body
-      const result = this.commentService.createComment(username, postId, text)
-      res.status(201).json(result)
+      const createdComment = await this.commentService.сreateComment(username, postId, text)
+      res.status(201).json(createdComment)
     } catch (error) {
       console.log(error);
       if (error.message) {
@@ -44,8 +44,8 @@ class CommentController {
   updateComment = async (req, res) => {
     try {
       const { text, id } = req.body
-      const result = this.commentService.updateComment(text, id)
-      res.status(200).json(result)
+      const updatedComment = await this.commentService.updateComment(text, id)
+      res.status(200).json(updatedComment)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -56,8 +56,9 @@ class CommentController {
 
   deleteComment = async (req, res) => {
     try {
-      this.commentService.deleteComment(req.params.id)
-      res.status(204).send()
+      const { id } = req.params
+      await this.commentService.deleteComment(id)
+      res.status(204).send('OK')
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -66,5 +67,6 @@ class CommentController {
     }
   }
 }
+
 
 module.exports = new CommentController(commentService)

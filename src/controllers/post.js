@@ -7,7 +7,7 @@ class PostController {
   getPosts = async (req, res) => {
     try {
       const { offset, limit } = req.query;
-      const result = this.postService.getPosts(offset, limit);
+      const result = await this.postService.getPosts(offset, limit);
       res.status(200).json(result);
 
     } catch (error) {
@@ -16,11 +16,11 @@ class PostController {
     }
   };
 
-  getPostById = (req, res) => {
+  getPostById = async (req, res) => {
     try {
-      const id = req.params.id
-      const result = this.postService.getPostById(id)
-      res.status(200).json(result)
+      const { id } = req.params
+      const post = await this.postService.getPostById(id)
+      res.status(200).json(post)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ "message": error.message })
@@ -31,9 +31,9 @@ class PostController {
 
   createPost = async (req, res) => {
     try {
-      const data = req.body;
-      const result = this.postService.createPost(data);
-      res.status(201).json(result);
+      const { username, text } = req.body;
+      const createdPost = await this.postService.createPost(username, text);
+      res.status(201).json(createdPost);
     } catch (error) {
       console.log(error);
       res.status(500).send('something went wrong');
@@ -41,9 +41,9 @@ class PostController {
   };
   updatePost = async (req, res) => {
     try {
-      const data = req.body
-      const result = this.postService.updatePost(data)
-      res.status(200).json(result)
+      const { id, text } = req.body
+      const updatedPost = await this.postService.updatePost(id, text)
+      res.status(200).json(updatedPost)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -53,8 +53,8 @@ class PostController {
   }
   deletePost = async (req, res) => {
     try {
-      this.postService.deletePost(req.params.id)
-      res.status(204).send()
+      await this.postService.deletePost(req.params.id)
+      res.status(204).send('OK')
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })

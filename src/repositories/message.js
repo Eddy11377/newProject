@@ -1,31 +1,35 @@
-const messageModel = require('../models/message');
-const database = [];
+const messageModel = require('../db/models/message');
 
 class MessageRepository {
-    constructor(database) {
-        this.database = database;
-        this.id = 1;
+    constructor(messageModel) {
+        this.messageModel = messageModel;
     }
-    createMessage(text, author, chat_id) {
-        const message = new messageModel(this.id, text, author, chat_id, new Date())
-        this.database.push(message)
-        this.id += 1
-        return { id: message.id }
-    }
-
-    getMessagesByChatId(chat_id) {
-        return this.database.filter((message) => {
-            return Number(chat_id) === Number(message.chat_id)
+    async createMessage(text, author, chatId) {
+        return this.messageModel.create({
+            text,
+            author,
+            chatId
         })
     }
 
-    getMessages(offset = 0, limit = 50) {
-        return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+    async getMessagesByChatId(chatId) {
+        return this.messageModel.findAll({
+            where: {
+                chatId
+            }
+        })
+    }
+
+    async getMessages(offset = 0, limit = 50) {
+        return this.messageModel.findAll({
+            offset,
+            limit
+        })
     }
 
 }
 
-module.exports = new MessageRepository(database)
+module.exports = new MessageRepository(messageModel)
 
 
 

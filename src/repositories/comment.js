@@ -1,32 +1,36 @@
-const commentModel = require('../models/comment')
-const database = []
+const commentModel = require('../db/models/comment')
 
 class CommentRepository {
-  constructor(database) {
-    this.database = database
-    this.id = 1
+  constructor(commentModel) {
+    this.commentModel = commentModel
   }
-  getComments(offset = 0, limit = 5) {
-    return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit))
+
+  async getComments(offset = 0, limit = 10) {
+    return this.commentModel.findAll({
+      offset,
+      limit
+    })
   }
-  getCommentById(id) {
-    return this.database.find(el => Number(id) === Number(el.id))
+
+  async getCommentById(id) {
+    return this.commentModel.findOne({ where: { id } })
   }
-  createComment(username, postId, text) {
-    const comment = new commentModel(this.id, username, postId, text)
-    this.database.push(comment)
-    this.id += 1
-    return comment
+
+  async createComment(username, postId, text) {
+    return this.commentModel.create({
+      username,
+      postId,
+      text
+    })
   }
-  updateComment(text, id) {
-    const foundIndex = this.database.findIndex(el => Number(el.id) === Number(id))
-    database[foundIndex].text = text
-    return database[foundIndex]
+
+  async updateComment(text, id) {
+    return this.commentModel.update({ text }, { where: { id } })
   }
-  deleteComment(id) {
-    const foundIndex = database.findIndex(el => Number(el.id) === Number(id))
-    this.database.splice(foundIndex, 1)
+
+  async deleteComment(id) {
+    this.commentModel.destroy({ where: { id } })
   }
 }
 
-module.exports = new CommentRepository(database)
+module.exports = new CommentRepository(commentModel)
