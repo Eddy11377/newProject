@@ -7,8 +7,9 @@ class SubscriptionController {
 
   getSubscriptionsByUsername = async (req, res) => {
     try {
-      const result = await this.subscriptionService.getSubscriptionsByUsername(req.params.username)
-      res.status(200).json(result)
+      const { username } = req.params
+      const foundSubscriptions = await this.subscriptionService.getSubscriptionsByUsername(username)
+      res.status(200).json(foundSubscriptions)
     } catch (error) {
       if (error.message) {
         return res.status(400).send(error.message)
@@ -19,8 +20,9 @@ class SubscriptionController {
 
   getSubscribersByUsername = async (req, res) => {
     try {
-      const result = await this.subscriptionService.getSubscribers(req.params.username)
-      res.status(200).json(result)
+      const { username } = req.params
+      const foundSubscribers = await this.subscriptionService.getSubscribers(username)
+      res.status(200).json(foundSubscribers)
     } catch (error) {
       if (error.message) {
         res.status(400).send(error.message)
@@ -32,8 +34,8 @@ class SubscriptionController {
   subscribe = async (req, res) => {
     try {
       const { username, subscriber } = req.body
-      const result = await this.subscriptionService.subscribe(username, subscriber)
-      res.status(201).json(result)
+      const createdSubscription = await this.subscriptionService.subscribe(username, subscriber)
+      res.status(201).json(createdSubscription)
     } catch (error) {
       if (error.message) {
         return res.status(400).send(error.message)
@@ -46,7 +48,7 @@ class SubscriptionController {
     try {
       const { username, subscriber } = req.query
       await this.subscriptionService.unsubscribe(username, subscriber)
-      res.status(200).json({ text: "Вы отписались от пользователя" })
+      res.status(200).send('OK')
     } catch (error) {
       if (error.message) {
         return res.status(400).send(error.message)

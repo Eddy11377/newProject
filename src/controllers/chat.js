@@ -9,8 +9,12 @@ class ChatController {
     getChats = async (req, res) => {
         try {
             const { offset, limit, firstParticipant, secondParticipant } = req.query
-            const result = await this.chatService.getChats(offset, limit, firstParticipant, secondParticipant)
-            res.status(200).json(result)
+            if (firstParticipant && secondParticipant) {
+                const chat = await this.chatService.getchat(firstParticipant, secondParticipant)
+                return res.status(200).json(chat)
+            }
+            const chats = await this.chatService.getChats(offset, limit)
+            res.status(200).json(chats)
         } catch (error) {
             console.log(error);
             res.status(500).send('something went wrong')
@@ -20,12 +24,12 @@ class ChatController {
     createChat = async (req, res) => {
         try {
             const { firstParticipant, secondParticipant } = req.body;
-            const result = await this.chatService.createChat(firstParticipant, secondParticipant)
-            res.status(201).json({id: result})
+            const chat = await this.chatService.createChat(firstParticipant, secondParticipant)
+            res.status(201).json(chat)
         } catch (error) {
             console.log(error);
             if (error.message) {
-                return res.status(400).json({message: error.message})
+                return res.status(400).json({ message: error.message })
             }
             res.status(500).send('something went wrong')
         }

@@ -26,7 +26,8 @@ class SubscriptionService {
       if (isSubscriptionExist) {
         throw new Error('Вы уже подписаны на этого пользователя')
       }
-      return await this.subscriptionRepository.createSubscription(username, subscriber)
+      const createdSubscription = await this.subscriptionRepository.createSubscription(username, subscriber)
+      return createdSubscription
     } catch (error) {
       if (error.message) {
         throw error
@@ -37,7 +38,7 @@ class SubscriptionService {
 
   async checkSubscription(writer, postAuthor) {
     try {
-      return await this.subscriptionRepository.findSubscription(writer, postAuthor )
+      return await this.subscriptionRepository.findSubscription(writer, postAuthor)
     } catch (error) {
       throw new Error('Не удалось проверить подписку. Что-то пошло не так')
     }
@@ -60,7 +61,8 @@ class SubscriptionService {
 
   async getSubscribers(username) {
     try {
-      return await this.subscriptionRepository.getSubscribers(username)
+      const foundSubscribers = await this.subscriptionRepository.getSubscribers(username)
+      return foundSubscribers
     } catch (error) {
       if (error.message) {
         throw error

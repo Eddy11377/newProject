@@ -31,20 +31,22 @@ class PostService {
 
   async createPost(username, text) {
     try {
-      return await this.postRepository.createPost(username, text)
+      const createdPost = await this.postRepository.createPost(username, text)
+      return createdPost
     } catch (error) {
-      console.log(error); 
+      console.log(error);
       throw new Error('не удалось создать пост')
     }
   }
 
   async updatePost(id, text) {
     try {
-      const result = await this.postRepository.getPostById(id)
-      if (!result) {
+      const post = await this.postRepository.getPostById(id)
+      if (!post) {
         throw new Error('Поста с таким ID не существует')
       }
-      return await this.postRepository.updatePost(text, id)
+      const updatedPost = await this.postRepository.updatePost(text, id)
+      return updatedPost
     } catch (error) {
       if (error.message) {
         throw error
@@ -59,7 +61,7 @@ class PostService {
       if (!post) {
         throw new Error('Поста с таким ID не существует')
       }
-      return await this.postRepository.deletePost(id)
+      await this.postRepository.deletePost(id)
     } catch (error) {
       if (error.message) {
         throw error

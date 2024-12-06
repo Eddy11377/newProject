@@ -1,4 +1,5 @@
 const chatModel = require('../db/models/chat');
+const { Op } = require('sequelize')
 
 class ChatRepository {
     constructor(chatModel) {
@@ -15,8 +16,10 @@ class ChatRepository {
     async getChat(firstParticipant, secondParticipant) {
         return this.chatModel.findOne({
             where: {
-                firstParticipant,
-                secondParticipant
+                [Op.or]: [{
+                    firstParticipant,
+                    secondParticipant
+                }, { firstParticipant: secondParticipant, secondParticipant: firstParticipant }]
             }
         })
     }

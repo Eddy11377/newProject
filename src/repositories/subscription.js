@@ -13,7 +13,7 @@ class SubscriptionRepository {
     })
   }
 
-  async findSubscription(subscriber, username ) {
+  async findSubscription(subscriber, username) {
     return this.subscriptionModel.findOne({
       where: {
         subscriber,
@@ -39,7 +39,8 @@ class SubscriptionRepository {
     return this.subscriptionModel.findAll({
       where: {
         username
-      }
+      },
+      [attributes]: 'subscriber'
     })
   }
 }

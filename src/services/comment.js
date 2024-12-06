@@ -13,7 +13,8 @@ class CommentService {
 
   async getComments(offset, limit) {
     try {
-      return await this.commentRepository.getComments(offset, limit)
+      const comments = await this.commentRepository.getComments(offset, limit)
+      return comments
     } catch (error) {
       console.error('Ошибка в getComments:', error);
       throw new Error('что-то пошло не так')
@@ -37,19 +38,21 @@ class CommentService {
 
   async сreateComment(username, postId, text) {
     try {
+      let createdComment;
       const post = await this.postService.getPostById(postId)
       const postAuthor = post.username
-      console.log('пост автор такой ' + postAuthor);
       const isOnlySubscriberCanWrite = await this.userService.checkSettingWriteComment(postAuthor)
       if (isOnlySubscriberCanWrite) {
         const subscribed = await this.subscriptionService.checkSubscription(username, postAuthor)
         if (subscribed) {
-          return await this.commentRepository.createComment(username, postId, text)
+          createdComment = await this.commentRepository.createComment(username, postId, text)
+          return createdComment
         } else {
           throw new Error('Только подписчики могут оставлять комментарии. Подпишитесь.')
         }
       }
-      return await this.commentRepository.createComment(username, postId, text)
+      createdComment = await this.commentRepository.createComment(username, postId, text)
+      return createdComment
     } catch (error) {
       if (error.message) {
         throw error
@@ -64,7 +67,8 @@ class CommentService {
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
-      return await this.commentRepository.updateComment(text, id)
+      const updatedComment = await this.commentRepository.updateComment(text, id)
+      return updatedComment
     } catch (error) {
       if (error.message) {
         throw error
@@ -79,7 +83,7 @@ class CommentService {
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
-      return await this.commentRepository.deleteComment(id)
+      await this.commentRepository.deleteComment(id)
     } catch (error) {
       if (error.message) {
         throw error

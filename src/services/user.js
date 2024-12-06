@@ -7,7 +7,8 @@ class UserService {
 
   async getUsers(offset, limit) {
     try {
-      return await this.userRepository.getUsers(offset, limit)
+      const users = await this.userRepository.getUsers(offset, limit)
+      return users
     } catch (error) {
       console.log(error);
       throw new Error('Ошибка получения пользователей')
@@ -35,8 +36,8 @@ class UserService {
       if (userExist) {
         throw new Error('Не удалось создать пользователя. Пользователь с таким username уже существует')
       }
-      const result = await this.userRepository.createUser(username, password, settings)
-      const user = { ...result }
+      const createdUser = await this.userRepository.createUser(username, password, settings)
+      const user = { ...createdUser }
       delete user.password
       return user
     } catch (error) {
@@ -54,7 +55,8 @@ class UserService {
       if (!foundUser) {
         throw new Error('Пользователя не существует')
       }
-      const user = { ... await this.userRepository.updateUser(settings, username) }
+      const updatedUser = await this.userRepository.updateUser(settings, username)
+      const user = { ...updatedUser }
       delete user.password
       return user
     } catch (error) {
@@ -82,8 +84,9 @@ class UserService {
   }
 
   async checkSettingWriteComment(username) {
-    const result = await this.userRepository.isOnlySubscribersCanWriteComments(username)
-    return result?.settings?.onlySubscriberWriteComment 
+    const user = await this.userRepository.isOnlySubscribersCanWriteComments(username)
+    const userSetting = user?.settings?.onlySubscriberWriteComment
+    return userSetting
   }
 }
 

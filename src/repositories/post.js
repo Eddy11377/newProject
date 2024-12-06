@@ -37,7 +37,7 @@ class PostRepository {
   }
 
   async deletePost(id) {
-    this.postModel.destroy({
+    return this.postModel.destroy({
       where: {
         id: id
       }
