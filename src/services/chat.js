@@ -5,20 +5,28 @@ class ChatService {
         this.chatRepository = chatRepository
     }
 
-    getChats(offset, limit, first_participant, second_participant,  ) {
+    async getChats(offset, limit) {
         try {
-            if (first_participant && second_participant) {
-                return this.chatRepository.getChat(first_participant, second_participant)
-            }
-            return this.chatRepository.getChats(offset, limit)
+            const chats = await this.chatRepository.getChats(offset, limit)
+            return chats
         } catch (error) {
             throw new Error('не удалось получить чаты')
         }
     }
 
-    createChat(first_participant, second_participant) {
+    async getСhat(firstParticipant, secondParticipant) {
         try {
-            return this.chatRepository.createChat(first_participant, second_participant)
+            const chat = await this.chatRepository.getChat(firstParticipant, secondParticipant)
+            return chat
+        } catch (error) {
+            throw new Error('Не удалось получить чат')
+        }
+    }
+
+    async createChat(firstParticipant, secondParticipant) {
+        try {
+            const chat = await this.chatRepository.createChat(firstParticipant, secondParticipant)
+            return chat
         } catch (error) {
             throw new Error('не удалось создать чат')
         }

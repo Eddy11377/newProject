@@ -1,27 +1,35 @@
-const chatModel = require('../models/chat');
-const database = [];
+const chatModel = require('../db/models/chat');
+const { Op } = require('../db/index')
 
 class ChatRepository {
-    constructor(database) {
-        this.database = database;
-        this.id = 1;
+    constructor(chatModel) {
+        this.chatModel = chatModel;
     }
 
-    getChats(offset = 0, limit = 10) {
-        return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+    async getChats(offset = 0, limit = 10) {
+        return this.chatModel.findAll({
+            limit,
+            offset
+        })
     }
 
-    getChat(first_participant, second_participant) {
-        const { id } = this.database.find(el => (String(el.first_participant) === String(first_participant) && String(el.second_participant) === String(second_participant)) || ((String(el.first_participant) === String(second_participant) && String(el.second_participant) === String(first_participant))))
-        return { id: id }
+    async getChat(firstParticipant, secondParticipant) {
+        return this.chatModel.findOne({
+            where: {
+                [Op.or]: [{
+                    firstParticipant,
+                    secondParticipant
+                }, { firstParticipant: secondParticipant, secondParticipant: firstParticipant }]
+            }
+        })
     }
 
-    createChat(first_participant, second_participant) {
-        const chat = new chatModel(this.id, first_participant, second_participant);
-        this.id += 1;
-        this.database.push(chat)
-        return { id: chat.id }
+    async createChat(firstParticipant, secondParticipant) {
+        return this.chatModel.create({
+            firstParticipant,
+            secondParticipant
+        })
     }
 }
 
-module.exports = new ChatRepository(database);
+module.exports = new ChatRepository(chatModel);

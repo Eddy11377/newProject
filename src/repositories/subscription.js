@@ -1,37 +1,48 @@
-const SubscriptionModel = require('../models/subscription')
-const database = []
+const subscriptionModel = require('../db/models/subscription')
 
 class SubscriptionRepository {
-  constructor(database) {
-    this.database = database
+  constructor(subscriptionModel) {
+    this.subscriptionModel = subscriptionModel
   }
 
-  getSubscriptionsByUsername(username) {
-    const subscriptions = this.database.filter(el => String(el.username) === String(username))
-    return subscriptions
+  async getSubscriptionsByUsername(username) {
+    return this.subscriptionModel.findAll({
+      where: {
+        username
+      }
+    })
   }
 
-  findSubscription(subscriber, username ) {
-    const result = this.database.find(el => String(el.username) === String(username) && String(el.subscriber) === String(subscriber))
-    return result
+  async findSubscription(subscriber, username) {
+    return this.subscriptionModel.findOne({
+      where: {
+        subscriber,
+        username
+      }
+    })
   }
 
-  createSubscription(username, subscriber) {
-    const model = new SubscriptionModel(username, subscriber)
-    this.database.push(model)
-    return model
+  async createSubscription(username, subscriber) {
+    return this.subscriptionModel.create({ username, subscriber })
   }
 
-  unsubscribe(username, subscriber) {
-    const foundIndex = database.findIndex((el) => String(el.username) === String(username) && String(el.subscriber) === String(subscriber))
-    database.splice(foundIndex, 1)
+  async unsubscribe(username, subscriber) {
+    return this.subscriptionModel.destroy({
+      where: {
+        username,
+        subscriber
+      }
+    })
   }
 
-  getSubscribers(username) {
-    return database.filter(el => String(username) === String(el.subscriber))
+  async getSubscribers(username) {
+    return this.subscriptionModel.findAll({
+      where: {
+        username
+      },
+      attributes: 'subscriber'
+    })
   }
 }
 
-
-
-module.exports = new SubscriptionRepository(database)
+module.exports = new SubscriptionRepository(subscriptionModel)

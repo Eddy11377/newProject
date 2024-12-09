@@ -5,26 +5,33 @@ class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    createMessage(text, author, chat_id) {
+    async createMessage(text, author, chatId) {
         try {
-            return this.messageRepository.createMessage(text, author, chat_id)
+            const createdMsg = await this.messageRepository.createMessage(text, author, chatId);
+            return createdMsg
         } catch (error) {
             console.log(error);
             throw new Error('не удалось создать сообщение')
         }
     }
 
-    getMessages(chat_id, offset, limit) {
+    async getMessages(offset, limit) {
         try {
-            if(chat_id) {
-                return this.messageRepository.getMessagesByChatId(chat_id)
-            } else {
-                return this.messageRepository.getMessages(offset, limit)
-            }
-            
+            const messages = await this.messageRepository.getMessages(offset, limit)
+            return messages
         } catch (error) {
             console.log(error);
             throw new Error('не удалось получить сообщения')
+        }
+    }
+
+    async getMessagesByChatId(chatId) {
+        try {
+            const messagesByChatId = await this.messageRepository.getMessagesByChatId(chatId)
+            return messagesByChatId
+        } catch (error) {
+            console.log(error);
+            throw new Error('не удалось получить сообщения по chatId')
         }
     }
 }

@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: homework
+      POSTGRES_USER: eddy
+      POSTGRES_PASSWORD: qwerty
+    ports:
+      - "5432:5432"

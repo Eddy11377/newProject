@@ -5,18 +5,19 @@ class UserService {
     this.userRepository = userRepository
   }
 
-  getUsers(offset, limit) {
+  async getUsers(offset, limit) {
     try {
-      return this.userRepository.getUsers(offset, limit)
+      const users = await this.userRepository.getUsers(offset, limit)
+      return users
     } catch (error) {
       console.log(error);
       throw new Error('Ошибка получения пользователей')
     }
   }
 
-  getUserByUsername(username) {
+  async getUserByUsername(username) {
     try {
-      const user = userRepository.getUserByUsername(username)
+      const user = await this.userRepository.getUserByUsername(username)
       if (!user) {
         throw new Error('Пользователя не существует')
       }
@@ -29,15 +30,14 @@ class UserService {
     }
   }
 
-  createUser(data) {
+  async createUser(username, password, settings) {
     try {
-      const { username, password, settings } = data
-      const userExist = this.userRepository.getUserByUsername(username)
+      const userExist = await this.userRepository.getUserByUsername(username)
       if (userExist) {
         throw new Error('Не удалось создать пользователя. Пользователь с таким username уже существует')
       }
-      const result = this.userRepository.createUser(username, password, settings)
-      const user = { ...result }
+      const createdUser = await this.userRepository.createUser(username, password, settings)
+      const user = { ...createdUser }
       delete user.password
       return user
     } catch (error) {
@@ -49,13 +49,14 @@ class UserService {
     }
   }
 
-  updateUser(username) {
+  async updateUser(username) {
     try {
-      const foundUser = this.userRepository.getUserByUsername(username)
+      const foundUser = await this.userRepository.getUserByUsername(username)
       if (!foundUser) {
         throw new Error('Пользователя не существует')
       }
-      const user = { ...this.userRepository.updateUser(data, username) }
+      const updatedUser = await this.userRepository.updateUser(settings, username)
+      const user = { ...updatedUser }
       delete user.password
       return user
     } catch (error) {
@@ -67,13 +68,13 @@ class UserService {
     }
   }
 
-  deleteUser(username) {
+  async deleteUser(username) {
     try {
-      const user = this.userRepository.getUserByUsername(username)
+      const user = await this.userRepository.getUserByUsername(username)
       if (!user) {
         throw new Error('Пользователя с таким username не существует')
       }
-      return this.userRepository.deleteUser(username)
+      return await this.userRepository.deleteUser(username)
     } catch (error) {
       if (error.message) {
         throw error
@@ -82,8 +83,10 @@ class UserService {
     }
   }
 
-  checkSettingWriteComment(username) {
-    return this.userRepository.isOnlySubscribersCanWriteComments(username)
+  async checkSettingWriteComment(username) {
+    const user = await this.userRepository.isOnlySubscribersCanWriteComments(username)
+    const userSetting = user?.settings?.onlySubscriberCanWriteComment
+    return userSetting
   }
 }
 

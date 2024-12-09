@@ -11,17 +11,19 @@ class CommentService {
     this.postService = postService
   }
 
-  getComments(offset, limit) {
+  async getComments(offset, limit) {
     try {
-      return this.commentRepository.getComments(offset, limit)
+      const comments = await this.commentRepository.getComments(offset, limit)
+      return comments
     } catch (error) {
+      console.error('Ошибка в getComments:', error);
       throw new Error('что-то пошло не так')
     }
   }
 
-  getCommentById(id) {
+  async getCommentById(id) {
     try {
-      const comment = this.commentRepository.getCommentById(id)
+      const comment = await this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
@@ -34,20 +36,23 @@ class CommentService {
     }
   }
 
-  createComment(username, postId, text) {
+  async сreateComment(username, postId, text) {
     try {
-      const post = this.postService.getPostById(postId)
+      let createdComment;
+      const post = await this.postService.getPostById(postId)
       const postAuthor = post.username
-      const isOnlySubscriberCanWrite = this.userService.checkSettingWriteComment(postAuthor)
+      const isOnlySubscriberCanWrite = await this.userService.checkSettingWriteComment(postAuthor)
       if (isOnlySubscriberCanWrite) {
-        const subscribed = this.subscriptionService.checkSubscription(username, postAuthor)
+        const subscribed = await this.subscriptionService.checkSubscription(username, postAuthor)
         if (subscribed) {
-          return this.commentRepository.createComment(username, postId, text)
+          createdComment = await this.commentRepository.createComment(username, postId, text)
+          return createdComment
         } else {
           throw new Error('Только подписчики могут оставлять комментарии. Подпишитесь.')
         }
       }
-      return this.commentRepository.createComment(username, postId, text)
+      createdComment = await this.commentRepository.createComment(username, postId, text)
+      return createdComment
     } catch (error) {
       if (error.message) {
         throw error
@@ -56,13 +61,14 @@ class CommentService {
     }
   }
 
-  updateComment(text, id) {
+  async updateComment(text, id) {
     try {
-      const comment = this.commentRepository.getCommentById(id)
+      const comment = await this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
-      return this.commentRepository.updateComment(text, id)
+      const updatedComment = await this.commentRepository.updateComment(text, id)
+      return updatedComment
     } catch (error) {
       if (error.message) {
         throw error
@@ -71,13 +77,13 @@ class CommentService {
     }
   }
 
-  deleteComment(id) {
+  async deleteComment(id) {
     try {
-      const comment = this.commentRepository.getCommentById(id)
+      const comment = await this.commentRepository.getCommentById(id)
       if (!comment) {
         throw new Error('Комментария с таким ID не существует')
       }
-      return this.commentRepository.deleteComment(id)
+      await this.commentRepository.deleteComment(id)
     } catch (error) {
       if (error.message) {
         throw error

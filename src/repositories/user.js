@@ -1,41 +1,37 @@
-const UserModel = require('../models/user')
-const database = [];
+const { where } = require('sequelize')
+const userModel = require('../db/models/user')
 
 class UserRepository {
-  constructor(database) {
-    this.database = database
-    this.tokens = 'some tokens'
+  constructor(userModel) {
+    this.userModel = userModel
   }
 
-  getUsers(offset = 0, limit = 5) {
-    return this.database.slice(parseInt(offset), parseInt(offset) + parseInt(limit))
+  async getUsers(offset = 0, limit = 15) {
+    return this.userModel.findAll({ offset, limit })
   }
 
-  createUser(username, password, settings) {
-    const user = new UserModel(username, password, this.tokens, settings)
-    this.database.push(user)
-    return user
+  async createUser(username, password, settings = { onlySubscriberCanWriteComment: false }) {
+    return this.userModel.create({ username, password, settings })
   }
 
-  getUserByUsername(username) {
-    return database.find(el => String(username) === String(el.username))
+  async getUserByUsername(username) {
+    return this.userModel.findOne({ where: { username } })
   }
 
-  updateUser(data, username) {
-    const foundIndex = database.findIndex(el => String(username) === String(el.username))
-    database[foundIndex] = data
-    return data
+  async updateUser(settings, username) {
+    return this.userModel.update({ settings }, {
+      where: {
+        username
+      }
+    })
   }
 
-  deleteUser(username) {
-    const foundIndex = database.findIndex(el => String(el.username) === String(username))
-    database.splice(foundIndex, 1)
+  async deleteUser(username) {
+    this.userModel.destroy({ where: { username } })
   }
 
-  isOnlySubscribersCanWriteComments(username) {
-    const user = database.find(el => String(el.username) === String(username))
-    const onlySubscribersCanWriteComments = user.settings.onlySubscriberWriteComment
-    return onlySubscribersCanWriteComments
+  async isOnlySubscribersCanWriteComments(username) {
+    return this.userModel.findOne({ where: { username } })
   }
 }
 
@@ -44,4 +40,4 @@ class UserRepository {
 
 
 
-module.exports = new UserRepository(database)
+module.exports = new UserRepository(userModel)

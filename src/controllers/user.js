@@ -3,11 +3,12 @@ class UserController {
   constructor(userService) {
     this.userService = userService
   }
+
   getUsers = async (req, res) => {
     try {
       const { offset, limit } = req.query
-      const result = this.userService.getUsers(offset, limit)
-      res.status(200).json(result)
+      const users = await this.userService.getUsers(offset, limit)
+      res.status(200).json(users)
     } catch (error) {
       console.log(error);
       res.status(500).json('something went wrong')
@@ -16,8 +17,8 @@ class UserController {
 
   getUserByUsername = async (req, res) => {
     try {
-      const result = this.userService.getUserByUsername(req.params.username)
-      res.status(200).json(result)
+      const user = await this.userService.getUserByUsername(req.params.username)
+      res.status(200).json(user)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -28,8 +29,9 @@ class UserController {
 
   createUser = async (req, res) => {
     try {
-      const result = this.userService.createUser(req.body)
-      res.status(201).json(result)
+      const { username, password, settings } = req.body
+      const createdUser = await this.userService.createUser(username, password, settings)
+      res.status(201).json(createdUser)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -41,8 +43,8 @@ class UserController {
   updateUser = async (req, res) => {
     try {
       const { username } = req.body
-      const result = this.userService.updateUser(username)
-      res.status(200).json(result)
+      const updatedUser = await this.userService.updateUser(username)
+      res.status(200).json(updatedUser)
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })
@@ -53,8 +55,9 @@ class UserController {
 
   deleteUser = async (req, res) => {
     try {
-      this.userService.deleteUser(req.params.username)
-      res.status(204).send()
+      const { username } = req.params
+      await this.userService.deleteUser(username)
+      res.status(204).send('OK')
     } catch (error) {
       if (error.message) {
         return res.status(400).json({ message: error.message })

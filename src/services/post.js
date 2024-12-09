@@ -4,18 +4,18 @@ class PostService {
   constructor(postRepository) {
     this.postRepository = postRepository;
   }
-  getPosts(offset, limit) {
+  async getPosts(offset, limit) {
     try {
-      return this.postRepository.getPosts(offset, limit);
+      return await this.postRepository.getPosts(offset, limit);
     } catch (error) {
       console.log(error);
       throw new Error('не удалось получить post');
     }
   }
 
-  getPostById(id) {
+  async getPostById(id) {
     try {
-      const post = this.postRepository.getPostById(id)
+      const post = await this.postRepository.getPostById(id)
       if (!post) {
         throw new Error('Поста с таким ID не существует')
       }
@@ -29,24 +29,24 @@ class PostService {
   }
 
 
-  createPost(data) {
+  async createPost(username, text) {
     try {
-      const { username, text } = data;
-      return this.postRepository.createPost(username, text)
+      const createdPost = await this.postRepository.createPost(username, text)
+      return createdPost
     } catch (error) {
       console.log(error);
       throw new Error('не удалось создать пост')
     }
   }
 
-  updatePost(data) {
+  async updatePost(id, text) {
     try {
-      const { id } = data
-      const result = this.postRepository.getPostById(id)
-      if (!result) {
+      const post = await this.postRepository.getPostById(id)
+      if (!post) {
         throw new Error('Поста с таким ID не существует')
       }
-      return this.postRepository.updatePost(data, id)
+      const updatedPost = await this.postRepository.updatePost(text, id)
+      return updatedPost
     } catch (error) {
       if (error.message) {
         throw error
@@ -55,13 +55,13 @@ class PostService {
     }
   }
 
-  deletePost(id) {
+  async deletePost(id) {
     try {
-      const post = postRepository.getPostById(id)
+      const post = await postRepository.getPostById(id)
       if (!post) {
         throw new Error('Поста с таким ID не существует')
       }
-      return this.postRepository.deletePost(id)
+      await this.postRepository.deletePost(id)
     } catch (error) {
       if (error.message) {
         throw error
