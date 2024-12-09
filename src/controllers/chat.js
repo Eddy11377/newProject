@@ -10,7 +10,7 @@ class ChatController {
         try {
             const { offset, limit, firstParticipant, secondParticipant } = req.query
             if (firstParticipant && secondParticipant) {
-                const chat = await this.chatService.getchat(firstParticipant, secondParticipant)
+                const chat = await this.chatService.getСhat(firstParticipant, secondParticipant)
                 return res.status(200).json(chat)
             }
             const chats = await this.chatService.getChats(offset, limit)

@@ -40,7 +40,7 @@ class SubscriptionRepository {
       where: {
         username
       },
-      [attributes]: 'subscriber'
+      attributes: 'subscriber'
     })
   }
 }

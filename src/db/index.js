@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, Op} = require('sequelize');
 const sequelize = new Sequelize("homework", "eddy", "qwerty", {
     dialect: "postgres",
     host: 'localhost',
@@ -15,4 +15,4 @@ async function createConnection() {
     }
 }
 
-module.exports = { sequelize, DataTypes, createConnection }
+module.exports = { sequelize, DataTypes, createConnection, Op }

@@ -10,7 +10,7 @@ class UserRepository {
     return this.userModel.findAll({ offset, limit })
   }
 
-  async createUser(username, password, settings = { onlySubscriberWriteComment: false }) {
+  async createUser(username, password, settings = { onlySubscriberCanWriteComment: false }) {
     return this.userModel.create({ username, password, settings })
   }
 

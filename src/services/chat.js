@@ -14,7 +14,7 @@ class ChatService {
         }
     }
 
-    async getchat(firstParticipant, secondParticipant) {
+    async getСhat(firstParticipant, secondParticipant) {
         try {
             const chat = await this.chatRepository.getChat(firstParticipant, secondParticipant)
             return chat

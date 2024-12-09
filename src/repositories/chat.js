@@ -1,5 +1,5 @@
 const chatModel = require('../db/models/chat');
-const { Op } = require('sequelize')
+const { Op } = require('../db/index')
 
 class ChatRepository {
     constructor(chatModel) {
